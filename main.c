@@ -36,6 +36,48 @@ void bubbleSort(int *arr, int size, int reverse)
    printf("\nВремя сортировки: %.6f секунд\n", time_spent);
 }
 
+ // Чтение массива из файла
+int *readFile(char *filename, int *size)
+{
+   FILE *file;
+   int *arr = NULL;
+   int number;
+
+   file = fopen(filename, "r");
+   if (file == NULL)
+   {
+      printf("Ошибка: файл '%s' не найден!\n", filename);
+      return NULL;
+   }
+
+   // Подсчет количества чисел
+   *size = 0;
+   while (fscanf(file, "%d", &number) == 1)
+   {
+      (*size)++;
+   }
+
+   rewind(file); // Возвращаем указатель в начало файла
+
+   // Выделяем память под массив
+   arr = (int *)malloc(*size * sizeof(int));
+   if (arr == NULL)
+   {
+      printf("Ошибка памяти!\n");
+      fclose(file);
+      return NULL;
+   }
+
+   // Чтение чисел в массив
+   for (int i = 0; i < *size; i++)
+   {
+      fscanf(file, "%d", &arr[i]);
+   }
+
+   fclose(file);
+   return arr;
+}
+
 // Вывод массива в консоль
 void printArr(int *arr, int size)
 {
@@ -53,9 +95,16 @@ int main(void) {
    SetConsoleOutputCP(65001);
    srand(time(NULL));
 
-   int size = 10;
-   int arr[] = {10, 8, 9, 5, 6, 7, 4, 3, 2, 1};
+   int size = 0;
+   int *arr = NULL;
 
+   arr = readFile("input.txt", &size);
+
+   if (arr == NULL) {
+      printf("Ошибка!");
+      return 1;
+   }
+   
    bubbleSort(arr, size, 0);
    printArr(arr, size);
    
