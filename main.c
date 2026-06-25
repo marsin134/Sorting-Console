@@ -49,16 +49,44 @@ void printArr(int *arr, int size)
    }
 }
 
+// Генерация массива случайных чисел
+int* generateRandomNumber(int size)
+{
+    if (size == NULL)
+    {
+        printf("Ошибка: передан NULL указатель!\n");
+        return NULL;
+    }
+    if (size <= 0)
+    {
+        printf("Ошибка: размер должен быть > 0!\n");
+        return NULL;
+    }
+    int* arr = (int*)malloc(size * sizeof(int));
+    if (arr == NULL)
+    {
+        printf("Ошибка памяти!\n");
+        return NULL;
+    }
+    for (int i = 0; i < size; i++)
+    {
+        arr[i] = rand() % 100;
+    }
+    return arr;
+}
+
+
 int main(void) {
-   SetConsoleOutputCP(65001);
-   srand(time(NULL));
+    SetConsoleOutputCP(65001);
+    srand(time(NULL));
 
-   int size = 10;
-   int arr[] = {10, 8, 9, 5, 6, 7, 4, 3, 2, 1};
+    int size = 10;
+    int* arr = NULL;
 
-   bubbleSort(arr, size, 0);
-   printArr(arr, size);
-   
-   bubbleSort(arr, size, 1);
-   printArr(arr, size);
+    arr = generateRandomNumber(size);
+    bubbleSort(arr, size, 0);
+    printArr(arr, size);
+
+    bubbleSort(arr, size, 1);
+    printArr(arr, size);
 }
