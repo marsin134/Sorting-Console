@@ -90,6 +90,36 @@ void printArr(int *arr, int size)
       };
    }
 }
+// Запись массива в файл
+int writeArr(char *filename, int *arr, int size)
+{
+   if (arr == NULL || size <= 0)
+   {
+      printf("Ошибка: массив пуст!\n");
+      return 1;
+   }
+
+   FILE *file;
+
+   file = fopen(filename, "w");
+   if (file == NULL)
+   {
+      printf("Ошибка: не удалось создать файл!\n");
+      return 1;
+   }
+
+   for (int i = 0; i < size; i++)
+   {
+      fprintf(file, "%d ", arr[i]);
+   }
+
+   fprintf(file, "\n");
+
+   fclose(file);
+   printf("\nМассив записан в файл %s\n", filename);
+   return 0;
+}
+
 
 int main(void) {
    SetConsoleOutputCP(65001);
@@ -110,4 +140,5 @@ int main(void) {
    
    bubbleSort(arr, size, 1);
    printArr(arr, size);
+   writeArr("output.txt",arr,size);
 }
