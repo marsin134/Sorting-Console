@@ -36,6 +36,48 @@ void bubbleSort(int *arr, int size, int reverse)
    printf("\nВремя сортировки: %.6f секунд\n", time_spent);
 }
 
+ // Чтение массива из файла
+int *readFile(char *filename, int *size)
+{
+   FILE *file;
+   int *arr = NULL;
+   int number;
+
+   file = fopen(filename, "r");
+   if (file == NULL)
+   {
+      printf("Ошибка: файл '%s' не найден!\n", filename);
+      return NULL;
+   }
+
+   // Подсчет количества чисел
+   *size = 0;
+   while (fscanf(file, "%d", &number) == 1)
+   {
+      (*size)++;
+   }
+
+   rewind(file); // Возвращаем указатель в начало файла
+
+   // Выделяем память под массив
+   arr = (int *)malloc(*size * sizeof(int));
+   if (arr == NULL)
+   {
+      printf("Ошибка памяти!\n");
+      fclose(file);
+      return NULL;
+   }
+
+   // Чтение чисел в массив
+   for (int i = 0; i < *size; i++)
+   {
+      fscanf(file, "%d", &arr[i]);
+   }
+
+   fclose(file);
+   return arr;
+}
+
 // Вывод массива в консоль
 void printArr(int *arr, int size)
 {
@@ -48,6 +90,36 @@ void printArr(int *arr, int size)
       };
    }
 }
+// Запись массива в файл
+int writeArr(char *filename, int *arr, int size)
+{
+   if (arr == NULL || size <= 0)
+   {
+      printf("Ошибка: массив пуст!\n");
+      return 1;
+   }
+
+   FILE *file;
+
+   file = fopen(filename, "w");
+   if (file == NULL)
+   {
+      printf("Ошибка: не удалось создать файл!\n");
+      return 1;
+   }
+
+   for (int i = 0; i < size; i++)
+   {
+      fprintf(file, "%d ", arr[i]);
+   }
+
+   fprintf(file, "\n");
+
+   fclose(file);
+   printf("\nМассив записан в файл %s\n", filename);
+   return 0;
+}
+
 
 // Генерация массива случайных чисел
 int* generateRandomNumber(int size)
@@ -133,14 +205,4 @@ int main(void) {
     srand(time(NULL));
 
     tests(10);
-}
-    int size = 10;
-    int* arr = NULL;
-
-    arr = generateRandomNumber(size);
-    bubbleSort(arr, size, 0);
-    printArr(arr, size);
-
-    bubbleSort(arr, size, 1);
-    printArr(arr, size);
 }
