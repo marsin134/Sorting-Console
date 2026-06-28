@@ -75,11 +75,65 @@ int* generateRandomNumber(int size)
     return arr;
 }
 
+int tests(int count) {
+    char inputPath[256];
+    char outputPath[256];
+    int passed = 0;
+    int failed = 0;
+    int flagReverse = 0;
+
+    for (int i = 1; i <= count; i++) {
+        int size = 0;
+
+        sprintf(inputPath, "tests/input%d.txt", i);
+        sprintf(outputPath, "tests/output%d.txt", i);
+
+        int* inputArr = readFile(inputPath, &size);
+        int* outputArr = readFile(outputPath, &size);
+
+        if (inputArr != NULL && outputArr != NULL) {
+            bubbleSort(inputArr, size, flagReverse);
+            // Сравниваем массивы, а не указатели
+            int equal = 1;
+            for (int j = 0; j < size; j++) {
+                if (inputArr[j] != outputArr[j]) {
+                    equal = 0;
+                    break;
+                }
+            }
+            if (equal) {
+                printf("Test №%d: Ок\n", i);
+                passed++;
+            }
+            else {
+                printf("Test №%d: Неверный ответ\n", i);
+                printf("Программа вернула: ");
+                printArr(inputArr, size);
+                printf("\nДолжно быть: ");
+                printArr(outputArr, size);
+                printf("\n\n");
+                failed++;
+            }
+        }
+        else {
+            printf("Test №%d SKIP (файл не найден)\n", i);
+        }
+        free(inputArr);
+        free(outputArr);
+
+        flagReverse = (flagReverse + 1) % 2;
+    }
+    printf("\nВерно: %d\n", passed);
+    printf("Не верно %d\n", failed);
+}
+
 
 int main(void) {
     SetConsoleOutputCP(65001);
     srand(time(NULL));
 
+    tests(10);
+}
     int size = 10;
     int* arr = NULL;
 
