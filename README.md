@@ -39,36 +39,36 @@ void bubbleSort(int *arr, int size, int reverse)
 {
    clock_t start = clock();
    int tmp;
-   unsigned numberOfExchanges;
+   int numberOfPermutations;
+   int numberOfExchanges;
 
+   numberOfPermutations = 0;
    do
    {
       numberOfExchanges = 0;
       for (int i = 0; i < size - 1; i++)
       {
-         // Сортировка по возрастанию (reverse = 0)
          if (!reverse && arr[i] > arr[i + 1])
          {
             tmp = arr[i];
             arr[i] = arr[i + 1];
             arr[i + 1] = tmp;
             numberOfExchanges++;
-         } 
-         // Сортировка по убыванию (reverse = 1)
-         else if (reverse && arr[i] < arr[i + 1])
-         {
+         } else if (reverse && arr[i] < arr[i + 1]) {
             tmp = arr[i];
             arr[i] = arr[i + 1];
             arr[i + 1] = tmp;
             numberOfExchanges++;
          }
       }
-      size--; // Уменьшаем диапазон, т.к. последний элемент уже на месте
-   } while (numberOfExchanges > 0); // Если обменов не было - массив отсортирован
+      size--;
+      numberOfPermutations += numberOfExchanges;
+   } while (numberOfExchanges > 0); // Если обменов не было, то массив отсортирован
 
    clock_t end = clock();
    double time_spent = (double)(end - start) / CLOCKS_PER_SEC;
    printf("\nВремя сортировки: %.6f секунд\n", time_spent);
+   printf("Количество перестановок: %d\n", numberOfPermutations);
 }
 ```
 
