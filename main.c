@@ -46,6 +46,8 @@ int *readFile(char *filename, int *size)
    FILE *file;
    int *arr = NULL;
    int number;
+   char ch;
+   int isValid = 1;
 
    file = fopen(filename, "r");
    if (file == NULL)
@@ -54,6 +56,26 @@ int *readFile(char *filename, int *size)
       return NULL;
    }
 
+   // Проверяем, что файл содержит только числа и разделители
+   while (fscanf(file, "%c", &ch) == 1)
+   {
+      // Разрешенные символы: цифры, пробелы, табуляция, перевод строки
+      if (!isdigit(ch) && !isspace(ch))
+      {
+         printf("Ошибка: файл '%s' содержит недопустимый символ '%c'!\n", filename, ch);
+         isValid = 0;
+         break;
+      }
+   }
+
+   if (!isValid)
+   {
+      fclose(file);
+      return NULL;
+   }
+
+   rewind(file);
+
    // Подсчет количества чисел
    *size = 0;
    while (fscanf(file, "%d", &number) == 1)
@@ -61,7 +83,14 @@ int *readFile(char *filename, int *size)
       (*size)++;
    }
 
-   rewind(file); // Возвращаем указатель в начало файла
+   if (*size == 0)
+   {
+      printf("Ошибка: файл '%s' пуст или не содержит чисел!\n", filename);
+      fclose(file);
+      return NULL;
+   }
+
+   rewind(file);
 
    // Выделяем память под массив
    arr = (int *)malloc(*size * sizeof(int));
