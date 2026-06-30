@@ -129,23 +129,28 @@ int* generateRandomNumber(int size)
         printf("Ошибка: передан NULL указатель!\n");
         return NULL;
     }
+
     if (size <= 0)
     {
         printf("Ошибка: размер должен быть > 0!\n");
         return NULL;
     }
+
     int* arr = (int*)malloc(size * sizeof(int));
     if (arr == NULL)
     {
         printf("Ошибка памяти!\n");
         return NULL;
     }
+
     for (int i = 0; i < size; i++)
     {
         arr[i] = rand() % 100;
     }
+
     return arr;
 }
+
 
 int tests(int count) {
     char inputPath[256];
